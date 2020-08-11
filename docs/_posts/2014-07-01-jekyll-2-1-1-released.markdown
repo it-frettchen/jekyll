@@ -1,10 +1,9 @@
 ---
-layout: news_item
 title: 'Jekyll 2.1.1 Released'
 date: 2014-07-01 20:16:43 -0400
 author: parkr
 version: 2.1.1
-categories: [release]
+category: release
 ---
 
 This is a minor release for Jekyll 2.1.0. It fixes a couple bugs and

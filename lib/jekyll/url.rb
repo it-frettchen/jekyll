@@ -1,4 +1,4 @@
-require "uri"
+# frozen_string_literal: true
 
 # Public: Methods that generate a URL for a resource such as a Post or a Page.
 #
@@ -35,15 +35,8 @@ module Jekyll
     # The generated relative URL of the resource
     #
     # Returns the String URL
-    # Raises a Jekyll::Errors::InvalidURLError if the relative URL contains a colon
     def to_s
-      sanitized_url = sanitize_url(generated_permalink || generated_url)
-      if sanitized_url.include?(":")
-        raise Jekyll::Errors::InvalidURLError,
-          "The URL #{sanitized_url} is invalid because it contains a colon."
-      else
-        sanitized_url
-      end
+      sanitize_url(generated_permalink || generated_url)
     end
 
     # Generates a URL from the permalink
@@ -75,11 +68,12 @@ module Jekyll
     def generate_url_from_hash(template)
       @placeholders.inject(template) do |result, token|
         break result if result.index(":").nil?
+
         if token.last.nil?
           # Remove leading "/" to avoid generating urls with `//`
-          result.gsub(%r!/:#{token.first}!, "")
+          result.gsub("/:#{token.first}", "")
         else
-          result.gsub(%r!:#{token.first}!, self.class.escape_path(token.last))
+          result.gsub(":#{token.first}", self.class.escape_path(token.last))
         end
       end
     end
@@ -100,13 +94,13 @@ module Jekyll
 
     def generate_url_from_drop(template)
       template.gsub(%r!:([a-z_]+)!) do |match|
-        pool = possible_keys(match.sub(":".freeze, "".freeze))
+        pool = possible_keys(match.sub(":", ""))
 
         winner = pool.find { |key| @placeholders.key?(key) }
         if winner.nil?
           raise NoMethodError,
-            "The URL template doesn't have #{pool.join(" or ")} keys. "\
-              "Check your permalink template!"
+                "The URL template doesn't have #{pool.join(" or ")} keys. "\
+                "Check your permalink template!"
         end
 
         value = @placeholders[winner]
@@ -114,14 +108,14 @@ module Jekyll
         replacement = self.class.escape_path(value)
 
         match.sub(":#{winner}", replacement)
-      end.gsub(%r!//!, "/".freeze)
+      end.squeeze("/")
     end
 
     # Returns a sanitized String URL, stripping "../../" and multiples of "/",
     # as well as the beginning "/" so we can enforce and ensure it.
 
     def sanitize_url(str)
-      "/" + str.gsub(%r!/{2,}!, "/").gsub(%r!\.+/|\A/+!, "")
+      "/#{str}".gsub("..", "/").gsub("./", "").squeeze("/")
     end
 
     # Escapes a path to be a valid URL path segment
@@ -135,6 +129,8 @@ module Jekyll
     #
     # Returns the escaped path.
     def self.escape_path(path)
+      return path if path.empty? || %r!^[a-zA-Z0-9./-]+$!.match?(path)
+
       # Because URI.escape doesn't escape "?", "[" and "]" by default,
       # specify unsafe string (except unreserved, sub-delims, ":", "@" and "/").
       #
@@ -145,7 +141,7 @@ module Jekyll
       #   pct-encoded   = "%" HEXDIG HEXDIG
       #   sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
       #                 / "*" / "+" / "," / ";" / "="
-      URI.escape(path, %r{[^a-zA-Z\d\-._~!$&'()*+,;=:@\/]}).encode("utf-8")
+      Addressable::URI.encode(path).encode("utf-8").sub("#", "%23")
     end
 
     # Unescapes a URL path segment
@@ -159,7 +155,10 @@ module Jekyll
     #
     # Returns the unescaped path.
     def self.unescape_path(path)
-      URI.unescape(path.encode("utf-8"))
+      path = path.encode("utf-8")
+      return path unless path.include?("%")
+
+      Addressable::URI.unencode(path)
     end
   end
 end

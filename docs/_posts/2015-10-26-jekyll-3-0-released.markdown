@@ -1,10 +1,9 @@
 ---
-layout: news_item
 title: 'Jekyll 3.0 Released'
 date: 2015-10-26 15:37:30 -0700
 author: parkr
 version: 3.0
-categories: [release]
+category: release
 ---
 
 The much-anticipated Jekyll 3.0 has been released! Key changes:

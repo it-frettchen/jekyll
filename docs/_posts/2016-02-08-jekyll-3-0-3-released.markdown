@@ -1,10 +1,9 @@
 ---
-layout: news_item
 title: 'Jekyll 3.0.3 Released'
 date: 2016-02-08 10:39:08 -0800
 author: parkr
 version: 3.0.3
-categories: [release]
+category: release
 ---
 
 [GitHub Pages upgraded to Jekyll 3.0.2][1] last week. With a testbed of

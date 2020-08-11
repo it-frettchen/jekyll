@@ -1,16 +1,14 @@
 ---
-layout: docs
 title: Data Files
 permalink: /docs/datafiles/
 ---
 
-In addition to the [built-in variables](../variables/) available from Jekyll,
+In addition to the [built-in variables]({{'/docs/variables/' | relative_url }}) available from Jekyll,
 you can specify your own custom data that can be accessed via the [Liquid
-templating system](https://wiki.github.com/shopify/liquid/liquid-for-designers).
+templating system](https://github.com/Shopify/liquid/wiki/Liquid-for-Designers).
 
-Jekyll supports loading data from [YAML](http://yaml.org/), [JSON](http://www.json.org/),
-and [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) files located in the `_data` directory.
-Note that CSV files *must* contain a header row.
+Jekyll supports loading data from [YAML](http://yaml.org/), [JSON](http://www.json.org/), [CSV](https://en.wikipedia.org/wiki/Comma-separated_values), and [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) files located in the `_data` directory.
+Note that CSV and TSV files *must* contain a header row.
 
 This powerful feature allows you to avoid repetition in your templates and to
 set site specific options without changing `_config.yml`.
@@ -19,9 +17,8 @@ Plugins/themes can also leverage Data Files to set configuration variables.
 
 ## The Data Folder
 
-As explained on the [directory structure](../structure/) page, the `_data`
-folder is where you can store additional data for Jekyll to use when generating
-your site. These files must be YAML, JSON, or CSV files (using either
+The `_data` folder is where you can store additional data for Jekyll to use when
+generating your site. These files must be YAML, JSON, or CSV files (using either
 the `.yml`, `.yaml`, `.json` or `.csv` extension), and they will be
 accessible via `site.data`.
 
@@ -45,20 +42,20 @@ In `_data/members.yml`:
 
 Or `_data/members.csv`:
 
-```text
+```
 name,github
 Eric Mill,konklone
 Parker Moore,parkr
 Liu Fengyun,liufengyun
 ```
 
-This data can be accessed via `site.data.members` (notice that the filename
-determines the variable name).
+This data can be accessed via `site.data.members` (notice that the file's *basename* determines the variable name and
+therefore one should avoid having data files with the same basename but different extensions, in the same directory).
 
 You can now render the list of members in a template:
 
-```html
 {% raw %}
+```liquid
 <ul>
 {% for member in site.data.members %}
   <li>
@@ -68,10 +65,10 @@ You can now render the list of members in a template:
   </li>
 {% endfor %}
 </ul>
-{% endraw %}
 ```
+{% endraw %}
 
-## Example: Organizations
+## Subfolders
 
 Data files can also be placed in sub-folders of the `_data` folder. Each folder
 level will be added to a variable's namespace. The example below shows how
@@ -104,8 +101,8 @@ members:
 The organizations can then be accessed via `site.data.orgs`, followed by the
 file name:
 
-```html
 {% raw %}
+```liquid
 <ul>
 {% for org_hash in site.data.orgs %}
 {% assign org = org_hash[1] %}
@@ -117,8 +114,8 @@ file name:
   </li>
 {% endfor %}
 </ul>
-{% endraw %}
 ```
+{% endraw %}
 
 ## Example: Accessing a specific author
 
@@ -132,10 +129,10 @@ dave:
     twitter: DavidSilvaSmith
 ```
 
-The author can then be specified as a page variable in a post's frontmatter:
+The author can then be specified as a page variable in a post's front matter:
 
-```html
 {% raw %}
+```liquid
 ---
 title: sample post
 author: dave
@@ -147,6 +144,7 @@ author: dave
   title="{{ author.name }}">
     {{ author.name }}
 </a>
-
-{% endraw %}
 ```
+{% endraw %}
+
+For information on how to build robust navigation for your site (especially if you have a documentation website or another type of Jekyll site with a lot of pages to organize), see [Navigation]({{ '/tutorials/navigation/' | relative_url }}).

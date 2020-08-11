@@ -1,20 +1,50 @@
 ---
-layout: docs
 title: Permalinks
 permalink: /docs/permalinks/
 ---
 
-Jekyll supports a flexible way to build your site’s URLs. You can specify the
-permalinks for your site through the [Configuration](../configuration/) or in
-the [YAML Front Matter](../frontmatter/) for each post. You’re free to choose
-one of the built-in styles to create your links or craft your own. The default
-style is `date`.
+Permalinks are the output path for your pages, posts, or collections. They
+allow you to structure the directories of your source code different from the
+directories in your output.
 
-Permalinks are constructed by creating a template URL where dynamic elements
-are represented by colon-prefixed keywords. For example, the default `date`
-permalink is defined according to the format `/:categories/:year/:month/:day/:title.html`.
+## Front Matter
 
-## Template variables
+The simplest way to set a permalink is using front matter. You set the
+`permalink` variable in front matter to the output path you'd like.
+
+For example, you might have a page on your site located at
+`/my_pages/about-me.html` and you want the output url to be `/about/`. In
+front matter of the page you would set:
+
+```yaml
+---
+permalink: /about/
+---
+```
+
+## Global
+
+Setting a permalink in front matter for every page on your site is no fun.
+Luckily, Jekyll lets you set the permalink structure globally in your `_config.yml`.
+
+To set a global permalink, you use the `permalink` variable in `_config.yml`.
+You can use placeholders to your desired output. For example:
+
+```yaml
+permalink: /:categories/:year/:month/:day/:title:output_ext
+```
+
+Note that pages and collections (excluding `posts` and `drafts`) don't have time
+and categories (for pages, the above `:title` is equivalent to `:basename`), these
+aspects of the permalink style are ignored for the output.
+
+For example, a permalink style of
+`/:categories/:year/:month/:day/:title:output_ext` for the `posts` collection becomes
+`/:title.html` for pages and collections (excluding `posts` and `drafts`).
+
+### Placeholders
+
+Here's the full list of placeholders available:
 
 <div class="mobile-side-scroller">
 <table>
@@ -30,39 +60,10 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
         <p><code>year</code></p>
       </td>
       <td>
-        <p>Year from the Post’s filename</p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>month</code></p>
-      </td>
-      <td>
-        <p>Month from the Post’s filename</p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>i_month</code></p>
-      </td>
-      <td>
-        <p>Month from the Post’s filename without leading zeros.</p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>day</code></p>
-      </td>
-      <td>
-        <p>Day from the Post’s filename</p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>i_day</code></p>
-      </td>
-      <td>
-        <p>Day from the Post’s filename without leading zeros.</p>
+        <p>
+          Year from the post’s filename with four digits.
+          May be overridden via the document’s <code>date</code> front matter.
+        </p>
       </td>
     </tr>
     <tr>
@@ -70,7 +71,124 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
         <p><code>short_year</code></p>
       </td>
       <td>
-        <p>Year from the Post’s filename without the century.</p>
+        <p>
+          Year from the post’s filename without the century. (00..99)
+          May be overridden via the document’s <code>date</code> front matter.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>month</code></p>
+      </td>
+      <td>
+        <p>
+          Month from the post’s filename. (01..12)
+          May be overridden via the document’s <code>date</code> front matter.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>i_month</code></p>
+      </td>
+      <td>
+        <p>
+          Month without leading zeros from the post’s filename. May be
+          overridden via the document’s <code>date</code> front matter.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>short_month</code></p>
+      </td>
+      <td>
+        <p>Three-letter month abbreviation, e.g. “Jan”.</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>long_month</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Full month name, e.g. “January”.</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>day</code></p>
+      </td>
+      <td>
+        <p>
+          Day of the month from the post’s filename. (01..31)
+          May be overridden via the document’s <code>date</code> front matter.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>i_day</code></p>
+      </td>
+      <td>
+        <p>
+          Day of the month without leading zeros from the post’s filename.
+          May be overridden via the document’s <code>date</code> front matter.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>y_day</code></p>
+      </td>
+      <td>
+        <p>Ordinal day of the year from the post’s filename, with leading zeros. (001..366)</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>w_year</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Week year which may differ from the month year for up to three days at the start of January and end of December</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>week</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Week number of the current year, starting with the first week having a majority of its days in January. (01..53)</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>w_day</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Day of the week, starting with Monday. (1..7)</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>short_day</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Three-letter weekday abbreviation, e.g. “Sun”.</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>long_day</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p>Weekday name, e.g. “Sunday”.</p>
       </td>
     </tr>
     <tr>
@@ -79,7 +197,8 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
       </td>
       <td>
         <p>
-          Hour of the day, 24-hour clock, zero-padded from the post’s <code>date</code> front matter. (00..23)
+          Hour of the day, 24-hour clock, zero-padded from the post’s
+          <code>date</code> front matter. (00..23)
         </p>
       </td>
     </tr>
@@ -110,7 +229,7 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
       <td>
         <p>
             Title from the document’s filename. May be overridden via
-            the document’s <code>slug</code> YAML front matter.
+            the document’s <code>slug</code> front matter.
         </p>
       </td>
     </tr>
@@ -120,9 +239,9 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
       </td>
       <td>
         <p>
-            Slugified title from the document’s filename ( any character
-            except numbers and letters is replaced as hyphen ). May be
-            overridden via the document’s <code>slug</code> YAML front matter.
+            Slugified title from the document’s filename (any character
+            except numbers and letters is replaced as hyphen). May be
+            overridden via the document’s <code>slug</code> front matter.
         </p>
       </td>
     </tr>
@@ -132,8 +251,28 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
       </td>
       <td>
         <p>
-          The specified categories for this Post. If a post has multiple
+          The specified categories for this post. If a post has multiple
           categories, Jekyll will create a hierarchy (e.g. <code>/category1/category2</code>).
+          Also Jekyll automatically parses out double slashes in the URLs,
+          so if no categories are present, it will ignore this.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>slugified_categories</code></p>
+        <small>{% include docs_version_badge.html version="4.1" %}</small>
+      </td>
+      <td>
+        <p>
+          The specified categories for this post but <em>slugified</em>. If a category is a
+          composite of multiple words, Jekyll will downcase all alphabets and replace any
+          non-alphanumeric character with a hyphen. (e.g. <code>"Work 2 Progress"</code>
+          will be converted into <code>"work-2-progress"</code>)
+        </p>
+        <p>
+          If a post has multiple categories, Jekyll will create a hierarchy
+          (e.g. <code>/work-2-progress/category2</code>).
           Also Jekyll automatically parses out double slashes in the URLs,
           so if no categories are present, it will ignore this.
         </p>
@@ -143,10 +282,9 @@ permalink is defined according to the format `/:categories/:year/:month/:day/:ti
 </table>
 </div>
 
-## Built-in permalink styles
+### Built-in formats
 
-While you can specify a custom permalink style using [template variables](#template-variables),
-Jekyll also provides the following built-in styles for convenience.
+For posts, Jekyll also provides the following built-in styles for convenience:
 
 <div class="mobile-side-scroller">
 <table>
@@ -162,7 +300,7 @@ Jekyll also provides the following built-in styles for convenience.
         <p><code>date</code></p>
       </td>
       <td>
-        <p><code>/:categories/:year/:month/:day/:title.html</code></p>
+        <p><code>/:categories/:year/:month/:day/:title:output_ext</code></p>
       </td>
     </tr>
     <tr>
@@ -178,7 +316,16 @@ Jekyll also provides the following built-in styles for convenience.
         <p><code>ordinal</code></p>
       </td>
       <td>
-        <p><code>/:categories/:year/:y_day/:title.html</code></p>
+        <p><code>/:categories/:year/:y_day/:title:output_ext</code></p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>weekdate</code></p>
+        <small>{% include docs_version_badge.html version="4.0" %}</small>
+      </td>
+      <td>
+        <p><code>/:categories/:year/W:week/:short_day/:title:output_ext</code></p>
       </td>
     </tr>
     <tr>
@@ -186,122 +333,144 @@ Jekyll also provides the following built-in styles for convenience.
         <p><code>none</code></p>
       </td>
       <td>
-        <p><code>/:categories/:title.html</code></p>
+        <p><code>/:categories/:title:output_ext</code></p>
       </td>
     </tr>
   </tbody>
 </table>
 </div>
 
-## Pages and collections
+Rather than typing `permalink: /:categories/:year/:month/:day/:title/`, you can just type `permalink: pretty`.
 
-The `permalink` configuration setting specifies the permalink style used for
-posts. Pages and collections each have their own default permalink style; the
-default style for pages is `/:path/:basename` and the default for collections is
-`/:collection/:path`.
+<div class="note info">
+<h5>Specifying permalinks through the front matter</h5>
+<p>Built-in permalink styles are not recognized in front matter. As a result, <code>permalink: pretty</code> will not work.</p>
+</div>
 
-These styles are modified to match the suffix style specified in the post
-permalink setting. For example, a permalink style of `pretty`, which contains a
-trailing slash, will update page permalinks to also contain a trailing slash:
-`/:path/:basename/`. A permalink style of `date`, which contains a trailing
-file extension, will update page permalinks to also contain a file extension:
-`/:path/:basename:output_ext`. The same is true for any custom permalink style.
+### Collections
 
-The permalink for an individual page or collection document can always be
-overridden in the [YAML Front Matter](../frontmatter/) for the page or document.
-Additionally, permalinks for a given collection can be customized [in the
-collections configuration](../collections/).
+For collections (including `posts` and `drafts`), you have the option to override
+the global permalink in the collection configuration in `_config.yml`:
 
-## Permalink style examples
+```yaml
+collections:
+  my_collection:
+    output: true
+    permalink: /:collection/:name
+```
 
-Given a post named: `/2009-04-29-slap-chop.md`
+Collections have the following placeholders available:
 
 <div class="mobile-side-scroller">
 <table>
   <thead>
     <tr>
-      <th>URL Template</th>
-      <th>Resulting Permalink URL</th>
+      <th>Variable</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>
-        <p>None specified, or <code>permalink: date</code></p>
+        <p><code>:collection</code></p>
       </td>
       <td>
-        <p><code>/2009/04/29/slap-chop.html</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>pretty</code></p>
-      </td>
-      <td>
-        <p><code>/2009/04/29/slap-chop/</code></p>
+        <p>Label of the containing collection.</p>
       </td>
     </tr>
     <tr>
       <td>
-        <p><code>/:month-:day-:year/:title.html</code></p>
+        <p><code>:path</code></p>
       </td>
       <td>
-        <p><code>/04-29-2009/slap-chop.html</code></p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p><code>/blog/:year/:month/:day/:title/</code></p>
-      </td>
-      <td>
-        <p><code>/blog/2009/04/29/slap-chop/</code></p>
+        <p>
+          Path to the document relative to the collection's directory,
+          including base filename of the document.
+        </p>
       </td>
     </tr>
     <tr>
       <td>
-        <p><code>/:year/:month/:title</code></p>
-        <p>See <a href="#extensionless-permalinks">extensionless permalinks</a> for details.</p>
+        <p><code>:name</code></p>
       </td>
       <td>
-        <p><code>/2009/04/slap-chop</code></p>
+        <p>The document's base filename, with every sequence of spaces
+        and non-alphanumeric characters replaced by a hyphen.</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>:title</code></p>
+      </td>
+      <td>
+        <p>
+          The <code>:title</code> template variable will take the
+          <code>slug</code> <a href="/docs/front-matter/">front matter</a>
+          variable value if any is present in the document; if none is
+          defined then <code>:title</code> will be equivalent to
+          <code>:name</code>, aka the slug generated from the filename.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>:output_ext</code></p>
+      </td>
+      <td>
+        <p>Extension of the output file. (Included by default and usually unnecessary.)</p>
       </td>
     </tr>
   </tbody>
 </table>
 </div>
 
-## Extensionless permalinks
+### Pages
 
-Jekyll supports permalinks that contain neither a trailing slash nor a file
-extension, but this requires additional support from the web server to properly
-serve. When using extensionless permalinks, output files written to disk will
-still have the proper file extension (typically `.html`), so the web server
-must be able to map requests without file extensions to these files.
+For pages, you have to use front matter to override the global permalink,
+and if you set a permalink via front matter defaults in `_config.yml`,
+it will be ignored.
 
-Both [GitHub Pages](../github-pages/) and the Jekyll's built-in WEBrick server
-handle these requests properly without any additional work.
+Pages have the following placeholders available:
 
-### Apache
-
-The Apache web server has very extensive support for content negotiation and can
-handle extensionless URLs by setting the [multiviews][] option in your
-`httpd.conf` or `.htaccess` file:
-
-[multiviews]: https://httpd.apache.org/docs/current/content-negotiation.html#multiviews
-
-{% highlight apache %}
-Options +MultiViews
-{% endhighlight %}
-
-### Nginx
-
-The [try_files][] directive allows you to specify a list of files to search for
-to process a request. The following configuration will instruct nginx to search
-for a file with an `.html` extension if an exact match for the requested URI is
-not found.
-
-[try_files]: http://nginx.org/en/docs/http/ngx_http_core_module.html#try_files
-
-{% highlight nginx %}
-try_files $uri $uri.html $uri/ =404;
-{% endhighlight %}
+<div class="mobile-side-scroller">
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <p><code>:path</code></p>
+      </td>
+      <td>
+        <p>
+          Path to the page relative to the site's source directory, excluding
+          base filename of the page.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>:basename</code></p>
+      </td>
+      <td>
+        <p>The page's base filename</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code>:output_ext</code></p>
+      </td>
+      <td>
+        <p>
+          Extension of the output file. (Included by default and usually
+          unnecessary.)
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

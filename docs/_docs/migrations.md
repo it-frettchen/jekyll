@@ -1,6 +1,5 @@
 ---
-layout: docs
-title: Blog migrations
+title: Blog Migrations
 permalink: /docs/migrations/
 ---
 
